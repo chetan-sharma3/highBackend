@@ -9,7 +9,7 @@
 // //this below code will run immidieltly
 // ;(async ()=>{
 //     try {
-//         await mongoose.connect(`${process.env.MONGODB_RUI}{DB_NAME}`)
+//         await mongoose.connect(`${process.env.MONGODB_RUI}/{DB_NAME}`)
 //         app.on("error",(error)=>{ //it is a listener if app is not able to connect then it will throw error
 //             console.log("error : ", error)
 //             throw error
@@ -29,5 +29,15 @@
 import dotenv from "dotenv" //we also have the experimental feature in which there lines 29 and 31 are not needed but in json file script we add default but for now it is experimental
 import connectDB from "./db/index.js"
 dotenv.config({path:'./env'})  
+import app from "./app.js"
 
-connectDB();
+connectDB()
+.then(()=>{
+    //we have connected the database but server is not started yet, below line will start the server
+    app.listen(process.env.PORT || 8000,()=>{
+        console.log(`Server is running at port ${process.env.PORT}`)
+    })
+})
+.catch((error)=>{
+    console.log("mongodb connection failed",error)
+})
